@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07112e">
+<title>Волшебная AR-открытка</title>
+<style>
+:root{--gold:#ffe39a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#06102b;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;color:#fff;-webkit-tap-highlight-color:transparent}
+#v{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;background:#06102b}
+#g{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+#shade{position:fixed;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(2,8,30,.55),transparent 28%,transparent 68%,rgba(2,8,30,.35))}
+#head{position:fixed;z-index:3;top:calc(18px + env(safe-area-inset-top,0px));left:12px;right:12px;text-align:center;pointer-events:none;animation:headin 1.2s cubic-bezier(.2,1.2,.4,1) both}
+#eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#fff3c7;text-shadow:0 2px 12px #000}
+#greet{margin:3px 0 0;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(28px,7vw,48px);line-height:1.08;color:#fff0bd;text-shadow:0 2px 4px #291800,0 0 24px rgba(255,203,87,.85)}
+#sub{font-size:clamp(12px,3vw,15px);margin-top:7px;color:#fff;text-shadow:0 2px 8px #000}
+#w{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:4;width:min(92vw,480px);text-align:center;padding:13px 16px 14px;border-radius:20px;background:rgba(7,17,48,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,225,150,.48);box-shadow:0 12px 45px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.16);font-size:15px;line-height:1.45;transition:opacity .5s}
+#w b{display:block;color:var(--gold);font-family:Georgia,serif;font-size:20px;margin-bottom:4px}
+#actions{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+#actions button{border:1px solid rgba(255,232,173,.7);border-radius:999px;padding:9px 15px;background:linear-gradient(180deg,#fff0b8,#eeb94b);color:#392400;font-weight:700;box-shadow:0 4px 15px rgba(255,190,60,.22);cursor:pointer;font:600 14px system-ui;min-height:38px}
+#actions button:active{transform:scale(.97)}
+#go{position:fixed;inset:0;z-index:8;border:0;background:radial-gradient(ellipse at 50% 35%,#243c83,#07112e 72%);color:#ffe39a;font:600 20px system-ui;padding:28px;line-height:1.5;cursor:pointer;text-align:center}
+#go::before{content:'✦  ·  ❄  ·  ✦';display:block;font-size:28px;letter-spacing:.4em;margin-bottom:20px;animation:twinkle 2s ease-in-out infinite}
+#go:disabled{opacity:.75;cursor:wait}
+#go small{display:block;font-size:14px;font-weight:400;margin-top:12px;color:#fff;opacity:.85}
+#err{position:fixed;top:12px;left:12px;right:12px;z-index:10;display:none;background:#6d1d2b;color:#fff;padding:12px;border-radius:12px;font-size:14px;line-height:1.4;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+#tip{position:fixed;z-index:3;top:calc(130px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:max-content;max-width:90vw;text-align:center;font-size:11px;letter-spacing:.08em;color:rgba(255,255,255,.78);text-shadow:0 2px 6px #000;pointer-events:none}
+@keyframes headin{from{opacity:0;transform:translateY(-18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes twinkle{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.08)}}
+@media(max-height:640px){#head{top:8px}#greet{font-size:26px}#sub{margin-top:2px}#tip{top:86px}#w{bottom:8px;padding:8px 12px;font-size:13px}#w b{font-size:17px}#actions{margin-top:6px}#actions button{padding:7px 12px;font-size:13px;min-height:34px}}
+</style>
+</head>
+<body>
+<video id="v" playsinline muted autoplay webkit-playsinline></video>
+<canvas id="g"></canvas>
+<div id="shade"></div>
+<header id="head">
+  <div id="eyebrow">✦ волшебная открытка ✦</div>
+  <div id="greet">С Новым годом!</div>
+  <div id="sub">Пусть чудеса случаются чаще</div>
+</header>
+<div id="tip">✨ 3D-ЁЛКА · ГИРЛЯНДЫ · СНЕГОПАД ✨</div>
+<div id="w">
+  <b>Пусть в новом году случится чудо! ✨</b>
+  <span>Тепла, радости и исполнения самых заветных желаний.</span>
+  <div id="actions">
+    <button id="wishBtn" type="button">Новое пожелание ✨</button>
+    <button id="motionBtn" type="button">Пауза анимации</button>
+  </div>
+</div>
+<div id="err" role="status"></div>
+<button id="go">
+  🎄<br>Нажмите, чтобы включить камеру
+  <small>Волшебная ёлка появится поверх изображения с камеры.<br>Требуется разрешение на доступ к камере.</small>
+</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const R = Math.random;
+const pick = a => a[Math.floor(R() * a.length)];
+const params = new URLSearchParams(location.search);
+const recipient = params.get('to');
+
+const wishes = [
+  'Пусть всё задуманное сбудется!',
+  'Тепла, света и семейного уюта!',
+  'Пусть удача идёт рядом весь год!',
+  'Здоровья, радости и самых тёплых встреч!',
+  'Пусть в новом году случится чудо!',
+  'Счастья, любви и ярких путешествий!',
+  'Пусть каждый день будет маленьким праздником!',
+  'Пусть рядом всегда будут те, кто дорог.',
+  'Пусть новый год подарит больше поводов улыбаться!',
+  'Пусть мечты сбываются быстрее, чем ты успеваешь их загадать!'
+];
+
+if (typeof THREE === 'undefined') {
+  document.getElementById('err').style.display = 'block';
+  document.getElementById('err').textContent = 'Не удалось загрузить 3D-библиотеку. Проверьте интернет и обновите страницу.';
+  document.getElementById('go').style.display = 'none';
+  return;
+}
+
+/* ===== THREE.JS SETUP ===== */
+const isMobile = innerWidth < 768;
+const renderer = new THREE.WebGLRenderer({
+  canvas: $('#g'),
+  alpha: true,
+  antialias: true,
+  powerPreference: 'high-performance'
+});
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, isMobile ? 1.6 : 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.25;
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+camera.position.set(0, 2, 11);
+camera.lookAt(0, 1.4, 0);
+
+/* ===== LIGHTING (rich, colorful, warm) ===== */
+scene.add(new THREE.HemisphereLight(0xd8e8ff, 0x1a2810, 1.15));
+
+const keyLight = new THREE.DirectionalLight(0xfff0c0, 2.2);
+keyLight.position.set(-5, 9, 6);
+scene.add(keyLight);
+
+const fillLight = new THREE.DirectionalLight(0x88c0ff, 1.1);
+fillLight.position.set(5, 4, -4);
+scene.add(fillLight);
+
+const rimLight = new THREE.PointLight(0x69baff, 3.0, 20);
+rimLight.position.set(4, 4.5, 3.5);
+scene.add(rimLight);
+
+const warmGlow = new THREE.PointLight(0xffc65c, 2.4, 18);
+warmGlow.position.set(0, 3.5, 3.5);
+scene.add(warmGlow);
+
+const backGlow = new THREE.PointLight(0xff9060, 1.6, 15);
+backGlow.position.set(0, 2, -4);
+scene.add(backGlow);
+
+/* ===== TREE GROUP ===== */
+const BASE_Y = -2.0;
+const tree = new THREE.Group();
+tree.position.y = BASE_Y;
+scene.add(tree);
+
+/* ---- Trunk ---- */
+const trunkMat = new THREE.MeshStandardMaterial({ color: 0x4d2e12, roughness: 0.95, metalness: 0.02 });
+const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.34, 1.1, 16), trunkMat);
+trunk.position.y = 0.4;
+tree.add(trunk);
+
+/* ---- Tree layers (main body) ---- */
+const LAYERS = isMobile ? 12 : 15;
+const CONE_SEGMENTS = isMobile ? 32 : 44;
+const TREE_TOP_Y = 5.1;
+const TREE_BOT_Y = 0.85;
+const TREE_BASE_RADIUS = 1.95;
+
+// Color gradient: dark emerald → bright spring green
+function layerColor(t) {
+  const c = new THREE.Color();
+  c.setHSL(0.32 + t * 0.02, 0.72, 0.16 + t * 0.22);
+  return c;
+}
+
+const cones = [];
+for (let i = 0; i < LAYERS; i++) {
+  const t = i / (LAYERS - 1);
+  const y = TREE_BOT_Y + t * (TREE_TOP_Y - TREE_BOT_Y);
+  const radius = TREE_BASE_RADIUS * Math.pow(1 - t, 0.85) + 0.12;
+  const height = 1.15 - t * 0.45;
+
+  const geo = new THREE.ConeGeometry(radius, height, CONE_SEGMENTS, 4);
+  const mat = new THREE.MeshStandardMaterial({
+    color: layerColor(t),
+    roughness: 0.78,
+    metalness: 0.04,
+    flatShading: false
+  });
+  const cone = new THREE.Mesh(geo, mat);
+  cone.position.y = y;
+  cone.rotation.y = i * 0.38;
+  tree.add(cone);
+  cones.push({ cone, t });
+}
+
+/* ---- Small branch tufts (organic silhouette, adds realism) ---- */
+const TUFTS = isMobile ? 110 : 180;
+for (let i = 0; i < TUFTS; i++) {
+  const t = Math.pow(R(), 0.7);
+  const y = TREE_BOT_Y + t * (TREE_TOP_Y - TREE_BOT_Y);
+  const baseR = TREE_BASE_RADIUS * Math.pow(1 - t, 0.85);
+  const radius = baseR * (0.85 + R() * 0.2);
+  const angle = R() * Math.PI * 2;
+
+  const tuftMat = new THREE.MeshStandardMaterial({
+    color: layerColor(Math.min(1, t + R() * 0.15)),
+    roughness: 0.88,
+    metalness: 0.02
+  });
+
+  const size = 0.28 + R() * 0.22;
+  const tuft = new THREE.Mesh(new THREE.ConeGeometry(0.09 + R() * 0.04, size, 6), tuftMat);
+  tuft.position.set(Math.cos(angle) * radius, y, Math.sin(angle) * radius);
+  tuft.rotation.z = Math.cos(angle) * (0.7 + R() * 0.3);
+  tuft.rotation.x = -Math.sin(angle) * (0.7 + R() * 0.3);
+  tuft.rotation.y = R() * Math.PI * 2;
+  tree.add(tuft);
+}
+
+/* ---- Spiral garland ---- */
+const GARLAND_TURNS = 6.5;
+const GARLAND_POINTS = isMobile ? 300 : 450;
+const garlandPts = [];
+for (let i = 0; i <= GARLAND_POINTS; i++) {
+  const u = i / GARLAND_POINTS;
+  const angle = u * Math.PI * 2 * GARLAND_TURNS;
+  const y = TREE_BOT_Y + 0.15 + u * (TREE_TOP_Y - TREE_BOT_Y - 0.2);
+  const r = (TREE_BASE_RADIUS * Math.pow(1 - u, 0.85) + 0.12) * 1.02;
+  garlandPts.push(new THREE.Vector3(Math.cos(angle) * r, y, Math.sin(angle) * r));
+}
+const garlandCurve = new THREE.CatmullRomCurve3(garlandPts);
+const garlandMesh = new THREE.Mesh(
+  new THREE.TubeGeometry(garlandCurve, GARLAND_POINTS * 1.4, 0.02, 5, false),
+  new THREE.MeshStandardMaterial({
+    color: 0xd4a640, emissive: 0x7a4a10, emissiveIntensity: 0.4,
+    metalness: 0.65, roughness: 0.35
+  })
+);
+tree.add(garlandMesh);
+
+/* ---- Garland bulbs ---- */
+const bulbPalette = [0xff3040, 0xffd040, 0x40d860, 0x40b8ff, 0xff70d0, 0xffa030, 0xa060ff];
+const BULB_COUNT = isMobile ? 60 : 90;
+const bulbs = [];
+for (let i = 0; i < BULB_COUNT; i++) {
+  const u = (i + 0.5) / BULB_COUNT;
+  const p = garlandCurve.getPoint(u);
+  const c = bulbPalette[i % bulbPalette.length];
+  const bulb = new THREE.Mesh(
+    new THREE.SphereGeometry(0.055, 8, 6),
+    new THREE.MeshStandardMaterial({
+      color: c, emissive: c, emissiveIntensity: 2.5, roughness: 0.3
+    })
+  );
+  bulb.position.copy(p);
+  tree.add(bulb);
+  bulbs.push({ bulb, phase: R() * Math.PI * 2, baseColor: c });
+}
+
+/* ---- Ornaments (hanging balls with strings) ---- */
+const ornPalette = [
+  0xff3b30, 0xffcc00, 0x30d158, 0x0a84ff, 0xbf5af2,
+  0xff9f0a, 0xff2d55, 0xffffff, 0x5ac8fa, 0xffd60a
+];
+const ORN_COUNT = isMobile ? 65 : 100;
+const ornaments = [];
+for (let i = 0; i < ORN_COUNT; i++) {
+  const t = 0.03 + R() * 0.92;
+  const y = TREE_BOT_Y + t * (TREE_TOP_Y - TREE_BOT_Y);
+  const baseR = TREE_BASE_RADIUS * Math.pow(1 - t, 0.85);
+  const radius = baseR * (0.9 + R() * 0.08);
+  const angle = R() * Math.PI * 2;
+  const c = ornPalette[i % ornPalette.length];
+  const size = (i % 6 === 0 ? 0.11 : 0.075) + R() * 0.02;
+
+  // string
+  const stringLen = 0.14 + R() * 0.1;
+  const string = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.004, 0.004, stringLen, 4),
+    new THREE.MeshBasicMaterial({ color: 0xd4b060, transparent: true, opacity: 0.7 })
+  );
+  string.position.set(Math.cos(angle) * radius, y + stringLen / 2 + size, Math.sin(angle) * radius);
+  tree.add(string);
+
+  // ball
+  const ball = new THREE.Mesh(
+    new THREE.SphereGeometry(size, 16, 12),
+    new THREE.MeshPhysicalMaterial({
+      color: c, metalness: 0.85, roughness: 0.14,
+      clearcoat: 1, clearcoatRoughness: 0.06,
+      emissive: c, emissiveIntensity: 0.1
+    })
+  );
+  ball.position.set(Math.cos(angle) * radius, y + size, Math.sin(angle) * radius);
+  tree.add(ball);
+  ornaments.push({ ball, string, phase: R() * Math.PI * 2, baseY: ball.position.y });
+}
+
+/* ---- Star on top ---- */
+const starGroup = new THREE.Group();
+starGroup.position.y = TREE_TOP_Y + 0.35;
+tree.add(starGroup);
+
+const starShape = new THREE.Shape();
+for (let i = 0; i < 10; i++) {
+  const a = Math.PI / 2 + i * Math.PI / 5;
+  const r = i % 2 === 0 ? 0.44 : 0.19;
+  const px = Math.cos(a) * r, py = Math.sin(a) * r;
+  if (i === 0) starShape.moveTo(px, py);
+  else starShape.lineTo(px, py);
+}
+starShape.closePath();
+
+const star = new THREE.Mesh(
+  new THREE.ExtrudeGeometry(starShape, {
+    depth: 0.13, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.035, bevelThickness: 0.035
+  }),
+  new THREE.MeshStandardMaterial({
+    color: 0xffd966, emissive: 0xffaa20, emissiveIntensity: 2.8,
+    metalness: 0.8, roughness: 0.15
+  })
+);
+starGroup.add(star);
+
+const starHalo = new THREE.Mesh(
+  new THREE.SphereGeometry(0.65, 16, 12),
+  new THREE.MeshBasicMaterial({ color: 0xffd966, transparent: true, opacity: 0.18 })
+);
+starGroup.add(starHalo);
+
+const starLight = new THREE.PointLight(0xffcc55, 3.5, 7);
+starLight.position.set(0, 0, 0.4);
+starGroup.add(starLight);
+
+/* ===== SNOW PARTICLES ===== */
+function createParticles(count, size, color, opacity, spread) {
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const vel = [];
+  for (let i = 0; i < count; i++) {
+    pos[i * 3] = (R() - 0.5) * spread;
+    pos[i * 3 + 1] = R() * 11 - 2;
+    pos[i * 3 + 2] = (R() - 0.5) * 5;
+    vel.push(0.006 + R() * 0.022);
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const p = new THREE.Points(geo, new THREE.PointsMaterial({
+    color, size, transparent: true, opacity,
+    depthWrite: false, sizeAttenuation: true
+  }));
+  scene.add(p);
+  return { points: p, vel, count };
+}
+
+const snow = createParticles(isMobile ? 450 : 800, 0.055, 0xffffff, 0.9, 14);
+const sparkles = createParticles(isMobile ? 80 : 140, 0.035, 0xffdf8a, 0.85, 12);
+
+/* ===== RESIZE ===== */
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.fov = 42;
+  if (w < h) {
+    camera.position.z = 11;
+  } else {
+    camera.position.z = 9.5;
+  }
+  camera.updateProjectionMatrix();
+}
+resize();
+addEventListener('resize', resize);
+addEventListener('orientationchange', () => setTimeout(resize, 120));
+
+/* ===== ANIMATION ===== */
+let running = true;
+let t = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  if (!running) return;
+
+  t += 0.016;
+
+  // Continuous smooth 3D rotation
+  tree.rotation.y += 0.0075;
+
+  // Gentle float bob
+  tree.position.y = BASE_Y + Math.sin(t * 0.7) * 0.07;
+
+  // Slight living tilt
+  tree.rotation.z = Math.sin(t * 0.4) * 0.015;
+
+  // Star spin + pulse
+  starGroup.rotation.y = t * 1.1;
+  starGroup.rotation.z = Math.sin(t * 1.3) * 0.08;
+  star.rotation.z = Math.sin(t * 0.8) * 0.15;
+  star.scale.setScalar(1 + 0.08 * Math.sin(t * 3.2));
+  starHalo.scale.setScalar(1 + 0.15 * Math.sin(t * 2.4));
+  starHalo.material.opacity = 0.14 + 0.08 * Math.sin(t * 2.4);
+  starLight.intensity = 3.0 + 1.2 * Math.sin(t * 2.5);
+
+  // Ornaments pulse + slight sway
+  for (let i = 0; i < ornaments.length; i++) {
+    const o = ornaments[i];
+    o.ball.scale.setScalar(1 + 0.09 * Math.sin(t * 2.4 + o.phase));
+    o.ball.position.y = o.baseY + Math.sin(t * 1.8 + o.phase) * 0.012;
+  }
+
+  // Bulbs twinkle
+  for (let i = 0; i < bulbs.length; i++) {
+    const b = bulbs[i];
+    b.bulb.material.emissiveIntensity = 1.6 + 1.6 * Math.abs(Math.sin(t * 2.6 + b.phase));
+  }
+
+  // Warm glow pulse
+  warmGlow.intensity = 2.0 + 0.6 * Math.sin(t * 2.0);
+
+  // Snow falling
+  [snow, sparkles].forEach((set, si) => {
+    const pos = set.points.geometry.attributes.position;
+    const speedMul = si ? 1.8 : 1;
+    for (let i = 0; i < set.count; i++) {
+      let y = pos.getY(i) - set.vel[i] * speedMul;
+      let x = pos.getX(i) + Math.sin(t * 0.7 + i * 0.5) * 0.004;
+      let z = pos.getZ(i) + Math.cos(t * 0.5 + i * 0.3) * 0.002;
+      if (y < -3.6) {
+        y = 8.5;
+        x = (R() - 0.5) * 14;
+        z = (R() - 0.5) * 5;
+      }
+      pos.setXYZ(i, x, y, z);
+    }
+    pos.needsUpdate = true;
+  });
+
+  renderer.render(scene, camera);
+}
+animate();
+
+/* ===== WISHES ===== */
+function showWish() {
+  const w = $('#w');
+  w.style.opacity = '0';
+  setTimeout(() => {
+    const greeting = recipient
+      ? escapeHtml(recipient) + ', с Новым годом! ✨'
+      : 'Пусть сбудется чудо! ✨';
+    w.innerHTML = '<b>' + greeting + '</b><span>' + pick(wishes) + '</span>' +
+      '<div id="actions">' +
+      '<button id="wishBtn" type="button">Новое пожелание ✨</button>' +
+      '<button id="motionBtn" type="button">' + (running ? 'Пауза анимации' : 'Продолжить анимацию') + '</button>' +
+      '</div>';
+    w.style.opacity = '1';
+    $('#wishBtn').onclick = showWish;
+    $('#motionBtn').onclick = toggleMotion;
+  }, 220);
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function toggleMotion() {
+  running = !running;
+  const b = $('#motionBtn');
+  if (b) b.textContent = running ? 'Пауза анимации' : 'Продолжить анимацию';
+}
+
+/* ===== CAMERA ===== */
+async function startCamera() {
+  const btn = $('#go');
+  const err = $('#err');
+  err.style.display = 'none';
+
+  if (!window.isSecureContext) {
+    showError('Камера доступна только по HTTPS. Откройте сайт по защищённому адресу (GitHub Pages, Netlify и т.п.).');
+    return;
+  }
+  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+    showError('Браузер не поддерживает доступ к камере. Попробуйте Chrome, Safari или Firefox последней версии.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '🎄<br>Запрашиваем доступ к камере…';
+
+  let stream;
+  try {
+    // First attempt: rear camera on phones
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      });
+    } catch (e1) {
+      // Fallback: any available camera (PC without rear-facing)
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false
+      });
+    }
+
+    const video = $('#v');
+    video.srcObject = stream;
+
+    await new Promise((resolve, reject) => {
+      if (video.readyState >= 2) return resolve();
+      const onReady = () => { cleanup(); resolve(); };
+      const onErr = (e) => { cleanup(); reject(e); };
+      const cleanup = () => {
+        video.removeEventListener('loadedmetadata', onReady);
+        video.removeEventListener('error', onErr);
+      };
+      video.addEventListener('loadedmetadata', onReady);
+      video.addEventListener('error', onErr);
+      setTimeout(() => { cleanup(); resolve(); }, 3000);
+    });
+
+    try {
+      await video.play();
+    } catch (playErr) {
+      video.muted = true;
+      await video.play();
+    }
+
+    btn.remove();
+    showWish();
+  } catch (e) {
+    if (stream) stream.getTracks().forEach(tr => tr.stop());
+    btn.disabled = false;
+    btn.innerHTML = '🎄<br>Нажмите, чтобы попробовать снова<small>Проверьте разрешения и HTTPS</small>';
+    showError(parseCameraError(e));
+  }
+}
+
+function parseCameraError(e) {
+  const name = e && e.name;
+  switch (name) {
+    case 'NotAllowedError':
+    case 'PermissionDeniedError':
+      return 'Доступ к камере запрещён. Разрешите камеру для сайта в настройках браузера и обновите страницу.';
+    case 'NotFoundError':
+    case 'DevicesNotFoundError':
+      return 'Камера не найдена на этом устройстве.';
+    case 'NotReadableError':
+    case 'TrackStartError':
+      return 'Камера занята другим приложением. Закройте его и попробуйте снова.';
+    case 'OverconstrainedError':
+    case 'ConstraintNotSatisfiedError':
+      return 'Камера не поддерживает запрошенное разрешение. Попробуйте ещё раз.';
+    case 'SecurityError':
+      return 'Камера заблокирована политикой безопасности. Откройте сайт по HTTPS.';
+    case 'AbortError':
+      return 'Запуск камеры был прерван. Попробуйте ещё раз.';
+    default:
+      return 'Не удалось включить камеру' + (name ? ' (' + name + ')' : '') + '. Попробуйте ещё раз.';
+  }
+}
+
+function showError(msg) {
+  const err = $('#err');
+  err.style.display = 'block';
+  err.textContent = msg;
+}
+
+$('#go').onclick = startCamera;
+
+addEventListener('pagehide', () => {
+  const v = $('#v');
+  if (v.srcObject) v.srcObject.getTracks().forEach(tr => tr.stop());
+});
+
+})();
+</script>
+</body>
+</html>

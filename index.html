@@ -88,7 +88,6 @@ body.intro #snow{z-index:51}
 .vl{text-align:center;margin:6px;font-size:14px;color:var(--gold)}
 #qr{background:#fff;padding:12px;border-radius:14px;display:inline-block;margin:10px}
 
-/* ===== v3: кнопки, вывеска, эффекты ===== */
 .btn{position:relative;overflow:hidden;font:600 14px 'Montserrat',sans-serif;letter-spacing:.07em;padding:12px 24px;margin:5px;border:1px solid rgba(255,238,175,.75);border-radius:999px;color:#3a2200;background:linear-gradient(180deg,#fff1b0,#ffc02e 55%,#e8901c);box-shadow:0 4px 0 #a8620f,0 8px 22px rgba(255,184,48,.45),inset 0 1px 0 #fff;transition:transform .2s,box-shadow .2s,filter .2s,background .3s;cursor:pointer;-webkit-tap-highlight-color:transparent;text-shadow:0 1px 0 rgba(255,255,255,.5)}
 .btn::before{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);transform:skewX(-20deg);transition:left .7s}
 .btn:hover::before{left:140%}
@@ -129,7 +128,6 @@ body.intro .sign{animation:none;opacity:0}
 #vw:-webkit-full-screen canvas{width:100%;height:100%;object-fit:contain}
 #qr img,#qr canvas{display:block}
 
-/* ===== v4: спокойная вывеска, сказочная сцена ===== */
 .sign{animation:drop2 1.3s ease-out both;transform-origin:50% 0;margin-top:52px}
 @keyframes drop2{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
 .rope{top:-50px;height:58px;width:2px;background:#ffd66b;box-shadow:0 0 6px rgba(255,200,80,.6)}
@@ -145,6 +143,48 @@ body.intro .sign{animation:none;opacity:0}
 .c{border:2px solid rgba(255,214,107,.55)}
 .c::before{content:"";position:absolute;left:0;right:0;top:0;height:13px;background:radial-gradient(circle at 13px 0,#fff 0 12px,transparent 13px) 0 0/26px 13px;border-radius:22px 22px 0 0;opacity:.92;pointer-events:none}
 .sub::after{content:"";display:block;width:120px;height:2px;margin:12px auto 0;background:linear-gradient(90deg,transparent,#ffd66b,transparent)}
+
+@keyframes treeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes auroraDrift{0%,100%{transform:translate3d(-3%,0,0) rotate(-3deg);opacity:.22}50%{transform:translate3d(3%,1.5vh,0) rotate(3deg);opacity:.42}}
+@keyframes hintGlow{0%,100%{text-shadow:0 0 0 rgba(255,214,107,0)}50%{text-shadow:0 0 14px rgba(255,214,107,.65)}}
+body:not(.intro)::before{content:"";position:fixed;z-index:0;pointer-events:none;left:-25vw;right:-25vw;top:8vh;height:34vh;background:linear-gradient(100deg,transparent,rgba(33,220,190,.07),rgba(112,137,255,.13),rgba(255,204,100,.06),transparent);filter:blur(28px);animation:auroraDrift 16s ease-in-out infinite}
+#tree{filter:drop-shadow(0 12px 18px rgba(0,0,0,.24));transform-origin:50% 80%;animation:treeFloat 5.5s ease-in-out infinite}
+.hint{animation:tw 3s infinite,hintGlow 4s ease-in-out infinite}
+.arb{isolation:isolate}
+.arb::after{content:"✦";position:absolute;right:15px;top:5px;color:#fff7c7;font-size:12px;animation:tw 1.8s infinite;pointer-events:none}
+@media(prefers-reduced-motion:reduce){#tree,body:not(.intro)::before,.hint,.arb::after{animation:none!important}}
+
+#topstar{opacity:0;transform:scale(.25) rotate(-160deg);transform-box:fill-box;transform-origin:center;transition:opacity .45s ease,transform .95s cubic-bezier(.2,1.6,.4,1);pointer-events:none}
+#topstar.lit{opacity:1;transform:scale(1) rotate(0)}
+.wrap .starbtn{order:5;margin-top:6px;font-size:13.5px;padding:11px 22px}
+.wrap .arb{order:6}
+.pred{transition:opacity .25s}
+
+.orc{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:6px}
+.orb{position:relative;width:168px;height:168px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+ background:
+  radial-gradient(circle at 33% 27%,rgba(255,255,255,.98) 0 5%,rgba(255,255,255,.55) 9%,rgba(255,255,255,0) 34%),
+  radial-gradient(circle at 50% 60%,#a8d6ff 0%,#5d78ff 36%,#3a26a8 68%,#150a44 100%);
+ box-shadow:0 0 44px rgba(120,170,255,.55),0 0 100px rgba(120,170,255,.22),inset -16px -20px 46px rgba(0,0,0,.5),inset 14px 16px 34px rgba(255,255,255,.28);
+ transition:transform .3s,box-shadow .3s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.orb:hover{transform:scale(1.05);box-shadow:0 0 62px rgba(150,195,255,.85),0 0 130px rgba(120,170,255,.3),inset -16px -20px 46px rgba(0,0,0,.5),inset 14px 16px 34px rgba(255,255,255,.3)}
+.orb:active{transform:scale(.95)}
+.orb svg{width:72%;height:72%;opacity:.92;animation:orbFloat 6s ease-in-out infinite}
+@keyframes orbFloat{50%{transform:translateY(-5px) rotate(8deg)}}
+.orb.spin svg{animation:orbSpin .95s cubic-bezier(.3,1.2,.4,1)}
+@keyframes orbSpin{0%{transform:rotate(0) scale(1)}45%{transform:rotate(200deg) scale(1.14)}100%{transform:rotate(360deg) scale(1)}}
+.orb::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(255,214,107,.3);animation:rot 30s linear infinite;pointer-events:none}
+.fcard{width:100%;max-width:540px;border-radius:20px;padding:20px 18px;text-align:center;
+ background:linear-gradient(160deg,rgba(52,42,130,.85),rgba(12,17,58,.94));
+ border:1px solid rgba(255,214,107,.45);
+ box-shadow:0 14px 44px rgba(0,0,0,.5),0 0 40px rgba(255,200,80,.12),inset 0 1px 0 rgba(255,255,255,.16)}
+.fcard.show{animation:fcIn .65s cubic-bezier(.2,1.2,.4,1)}
+@keyframes fcIn{from{opacity:0;transform:translateY(18px) rotateX(-32deg)}to{opacity:1;transform:none}}
+.fchip{display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:5px 13px;border-radius:999px;color:#3a2200;background:linear-gradient(180deg,#fff1b0,#ffc02e);box-shadow:0 3px 12px rgba(255,184,48,.35);margin-bottom:12px;font-weight:700}
+.ftext{font-family:'Marck Script',cursive;font-size:23px;line-height:1.45;margin:0 0 14px;color:#fff;text-shadow:0 0 18px rgba(255,214,107,.25)}
+.fmeta{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-size:12px}
+.fmeta span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px}
+.fmeta b{color:var(--gold)}
 </style>
 </head>
 <body class="intro">
@@ -162,39 +202,36 @@ body.intro .sign{animation:none;opacity:0}
   </div></div></div>
   <div class="sub">Праздничная ёлка — нажимайте на шарики</div>
   <svg id="tree" viewBox="0 0 400 560" aria-label="Новогодняя ёлка"></svg>
-  <div class="hint">Откройте все шесть волшебных игрушек</div><button class="btn arb" id="arb">AR-открытка и QR-код</button>
+  <div class="hint">Откройте все шесть волшебных игрушек</div>
+  <button class="btn starbtn" id="starbtn">⭐ Повесить звезду</button>
+  <button class="btn arb" id="arb">AR-открытка и QR-код</button>
 </div>
 <button id="mus" title="Музыка">♪</button>
 <div id="m"><div class="c"><button class="x">✕</button><h2 id="mt"></h2><div id="mb"></div></div></div>
 
-<script>(function(){var p=new URLSearchParams(location.search);if(!p.has("ar"))return;var h="<!DOCTYPE html>\n<html lang=\"ru\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><title>AR-открытка<\/title>\n<style>html,body{margin:0;height:100%;background:radial-gradient(#1a2f7a,#050b24);overflow:hidden;font-family:system-ui,sans-serif;color:#fff}\n#v,#g{position:fixed;inset:0;width:100%;height:100%;object-fit:cover}#g{z-index:2}\n#w{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:3;width:min(92vw,520px);box-sizing:border-box;text-align:center;padding:16px 18px;border-radius:20px;background:rgba(10,20,70,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,220,130,.5);box-shadow:0 0 40px rgba(255,200,80,.3);font-size:19px;line-height:1.4;transition:opacity .6s}\n#w b{display:block;color:#ffd66b;font-size:26px;margin-bottom:6px}\n#go{position:fixed;inset:0;z-index:5;border:0;background:radial-gradient(#1a2f7a,#050b24);color:#ffd66b;font:600 22px system-ui;padding:20px}<\/style><\/head>\n<body><video id=\"v\" playsinline muted><\/video><canvas id=\"g\"><\/canvas><div id=\"w\"><\/div>\n<button id=\"go\">🎄 Нажмите, чтобы включить камеру и увидеть поздравление<\/button>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js\"><\/script>\n<script>\nconst $=s=>document.querySelector(s),R=Math.random,pick=a=>a[R()*a.length|0],q=window.AR_TO||new URLSearchParams(location.search).get('to');\nconst WS=['Пусть всё задуманное сбудется!','Тепла, света и семейного уюта!','Пусть удача идёт рядом весь год!','Здоровья, радости и самых тёплых встреч!','Пусть в новом году случится чудо!','Счастья, любви и ярких путешествий!','Пусть каждый день будет как маленький праздник!'];\nconst r=new THREE.WebGLRenderer({canvas:$('#g'),alpha:true,antialias:true});r.setPixelRatio(Math.min(devicePixelRatio,2));\nconst sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(50,1,.1,100);cam.position.set(0,1.4,8);\nsc.add(new THREE.AmbientLight(0xffffff,.75));const dl=new THREE.DirectionalLight(0xfff0c0,1);dl.position.set(3,5,4);sc.add(dl);\nconst tree=new THREE.Group();sc.add(tree);\nfor(let i=0;i<4;i++){const m=new THREE.Mesh(new THREE.ConeGeometry(1.6-i*.33,1.6,24),new THREE.MeshStandardMaterial({color:0x1f9d55,emissive:0x053d1d,roughness:.6}));m.position.y=i*.95;tree.add(m)}\nconst tr=new THREE.Mesh(new THREE.CylinderGeometry(.22,.26,.8,12),new THREE.MeshStandardMaterial({color:0x6b3b1a}));tr.position.y=-1;tree.add(tr);\nconst star=new THREE.Mesh(new THREE.OctahedronGeometry(.28),new THREE.MeshStandardMaterial({color:0xffc23d,emissive:0xffa000,emissiveIntensity:1.2}));star.position.y=3.95;tree.add(star);\nconst col=[0xff4d4d,0xffd34d,0x4dd2ff,0x7dff7d,0xff7ae0],B=[];\nfor(let k=0;k<90;k++){const i=R()*4|0,u=R()*.9,y=i*.95-.8+u*1.6,rad=(1.6-i*.33)*(1-u)*1.04,a=R()*6.28,big=k%3==0;\n const m=new THREE.Mesh(new THREE.SphereGeometry(big?.12:.065,12,12),big?new THREE.MeshStandardMaterial({color:[0xd62839,0xffc23d,0x2b6bff][k%3|0?0:k%9/3|0],metalness:.8,roughness:.2}):new THREE.MeshBasicMaterial({color:col[k%5]}));\n m.position.set(Math.cos(a)*rad,y,Math.sin(a)*rad);m.userData={big,k};tree.add(m);B.push(m)}\nconst mkP=(n,sz)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(n*3),3));const p=new THREE.Points(g,new THREE.PointsMaterial({size:sz,color:0xffffff,transparent:true,opacity:.9,depthWrite:false}));sc.add(p);return p};\nconst snow=mkP(500,.07),sp=snow.geometry.attributes.position;for(let i=0;i<500;i++)sp.setXYZ(i,R()*16-8,R()*13-5,R()*8-4);\nconst FW=[];function burst(){const n=140,g=new THREE.BufferGeometry(),pos=new Float32Array(n*3),cl=new Float32Array(n*3),v=[],c=new THREE.Color().setHSL(R(),1,.6),ox=R()*8-4,oy=R()*3+1.5,oz=-2-R()*2;\n for(let i=0;i<n;i++){const a=R()*6.28,b=Math.acos(2*R()-1),s=.02+R()*.05;v.push([Math.sin(b)*Math.cos(a)*s,Math.sin(b)*Math.sin(a)*s,Math.cos(b)*s]);pos.set([ox,oy,oz],i*3);cl.set([c.r,c.g,c.b],i*3)}\n g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(cl,3));\n const p=new THREE.Points(g,new THREE.PointsMaterial({size:.12,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));sc.add(p);FW.push({p,v,l:1})}\nfunction rs(){r.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.position.z=innerWidth<innerHeight?10:8;cam.updateProjectionMatrix()}rs();addEventListener('resize',rs);\nlet t=0,nb=0;(function f(){requestAnimationFrame(f);t+=.016;tree.rotation.y=t*.6;tree.position.y=Math.sin(t)*.12-.4;star.rotation.y=t*2;star.scale.setScalar(1+.15*Math.sin(t*4));\n for(const m of B)m.scale.setScalar(m.userData.big?1:.6+.6*Math.abs(Math.sin(t*3+m.userData.k)));\n for(let i=0;i<500;i++){let y=sp.getY(i)-.02;if(y<-5)y=8;sp.setY(i,y);sp.setX(i,sp.getX(i)+Math.sin(t+i)*.003)}sp.needsUpdate=true;\n if(t>nb){burst();nb=t+.9+R()}\n for(let i=FW.length-1;i>=0;i--){const o=FW[i],a=o.p.geometry.attributes.position;for(let j=0;j<o.v.length;j++){o.v[j][1]-=.0008;a.setXYZ(j,a.getX(j)+o.v[j][0],a.getY(j)+o.v[j][1],a.getZ(j)+o.v[j][2])}a.needsUpdate=true;o.l-=.012;o.p.material.opacity=o.l;if(o.l<=0){sc.remove(o.p);o.p.geometry.dispose();FW.splice(i,1)}}\n r.render(sc,cam)})();\nfunction wish(){const w=$('#w');w.style.opacity=0;setTimeout(()=>{w.innerHTML='<b>'+(q?q+', с':'С')+' Новым годом! ✨<\/b>'+pick(WS);w.style.opacity=1},500)}\n$('#go').onclick=async()=>{try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});$('#v').srcObject=s;$('#v').play()}catch(e){}$('#go').remove();wish();setInterval(wish,6500)};\n<\/script><\/body><\/html>\n";h=h.replace("<script>","<script>window.AR_TO="+JSON.stringify(p.get("to")||"")+";");location.replace(URL.createObjectURL(new Blob([h],{type:"text/html"})))})();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+(() => {
+'use strict';
 function boughs(x,cx,by,s){x.lineCap='round';for(let i=6;i>=0;i--)for(const sd of[-1,1])for(let j=0;j<2;j++){const r=(16+i*8.5)*s*(1-j*.22),y=by-(165-i*21)*s+j*7*s;for(const[wd,col]of[[15,'#08381f'],[10,'#18843f'],[10,'rgba(90,230,140,.7)']]){x.strokeStyle=col;x.lineWidth=wd*s*(.45+i*.09);x.setLineDash(col[0]=='r'?[1.5,4]:[]);x.beginPath();x.moveTo(cx,y);x.quadraticCurveTo(cx+sd*r*.55,y-4*s,cx+sd*r,y+13*s+r*.16);x.stroke()}x.setLineDash([])}x.fillStyle='#5a3418';x.fillRect(cx-7*s,by-6*s,14*s,12*s)}
 const $=s=>document.querySelector(s),R=Math.random,pick=a=>a[R()*a.length|0];
-const VIDEOS=[]; // сюда можно добавить ссылки на свои .mp4 — тогда в окне «видео» будут играть они
 
-/* ---------- фон: звёзды, метеоры, Санта ---------- */
 for(let i=0;i<70;i++){const s=document.createElement('div');s.className='st';s.style.cssText=`left:${R()*100}vw;top:${R()*70}vh;animation-delay:${R()*3}s;opacity:${.4+R()*.6}`;document.body.prepend(s)}
 setInterval(()=>{const s=document.createElement('div');s.className='sh';s.style.cssText=`left:${R()*60}vw;top:${R()*30}vh`;document.body.append(s);setTimeout(()=>s.remove(),1500)},5000);
-function santa(){const s=document.createElement('div');s.className='santa';s.textContent='🦌🦌🛷🎅';document.body.append(s);setTimeout(()=>s.remove(),18500)}
 
 addEventListener('pointermove',e=>{if(R()<.35){const s=document.createElement('div');s.className='sp';s.textContent=pick(['✦','✧','❄','✨']);s.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;font-size:${10+R()*10}px`;document.body.append(s);setTimeout(()=>s.remove(),800)}});
 
-/* ---------- снег ---------- */
 const sc=$('#snow'),sx=sc.getContext('2d');let fl=[];
 function rs(){sc.width=innerWidth;sc.height=innerHeight}rs();addEventListener('resize',rs);
 for(let i=0;i<170;i++)fl.push({x:R()*innerWidth,y:R()*innerHeight,r:.8+R()*3,v:.4+R()*1.2,p:R()*6});
 let T=0;(function f(){T+=.01;sx.clearRect(0,0,sc.width,sc.height);for(const a of fl){a.y+=a.v;a.x+=Math.sin(T+a.p)*.5+Math.sin(T/3)*.6;if(a.y>sc.height+5){a.y=-5;a.x=R()*sc.width}if(a.x>sc.width+5)a.x=-5;if(a.x<-5)a.x=sc.width;sx.fillStyle=`rgba(255,255,255,${.35+a.r/5})`;sx.beginPath();sx.arc(a.x,a.y,a.r,0,7);sx.fill()}requestAnimationFrame(f)})();
 
-/* ---------- таймер ---------- */
 let prev={};
 function tick(){const n=new Date(),t=new Date(n.getFullYear()+1,0,1),df=Math.max(0,t-n)/1000|0;
 const v={d:df/86400|0,h:df%86400/3600|0,mi:df%3600/60|0,s:df%60};
 for(const k in v){const e=$('#'+k),x=k=='d'?v[k]:String(v[k]).padStart(2,'0');if(prev[k]!==x){e.textContent=x;e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');prev[k]=x}}}
 tick();setInterval(tick,1000);
 
-/* ---------- ёлка (SVG) ---------- */
 const NS='http://www.w3.org/2000/svg';
 const cols=[['#ff6b6b','#a80d24'],['#ffe27a','#c98a00'],['#6ee0ff','#0a6fb0'],['#c58bff','#5a1fb3'],['#7dff9a','#0b8a3c'],['#ff9ed8','#b0206e']];
 let svg=`<defs>
@@ -214,19 +251,15 @@ for(let i=10;i>=0;i--)for(const sd of[-1,1])for(let j=0;j<3;j++){
  svg+=`<path d="${d}" fill="none" stroke="#062f1a" stroke-width="${w+5}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${sd>0?'#1d8f47':'#157a3c'}" stroke-width="${w}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#5fe898" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="1.2 4.2" opacity=".7"/>`;
  if(j==0)svg+=`<path d="M${200+sd*r*.2} ${y-5} Q${200+sd*r*.55} ${y-10} ${200+sd*r*.95} ${e-4}" fill="none" stroke="#fff" stroke-width="3.2" stroke-dasharray="7 9" stroke-linecap="round" opacity=".85"/>`}
 svg+=`<path d="M190 480 v52 M200 478 v54 M211 480 v52" stroke="#4a280f" stroke-width="2" opacity=".6"/>`;
-/* гирлянды */
 const lc=['#ff4d4d','#ffd34d','#4dd2ff','#7dff7d','#ff7ae0'];
 [[150,38,10],[250,76,12],[345,116,16],[432,156,18]].forEach(([y,hw,sag],gi)=>{
  let d='';for(let k=0;k<=24;k++){const t=k/24,x=200-hw+2*hw*t,yy=y+sag*Math.sin(Math.PI*t);d+=(k?'L':'M')+x.toFixed(1)+' '+yy.toFixed(1)}
  svg+=`<path d="${d}" fill="none" stroke="#2b1a0c" stroke-width="1.5"/>`;
  for(let k=1;k<12;k++){const t=k/12,x=200-hw+2*hw*t,yy=y+sag*Math.sin(Math.PI*t),c=lc[(k+gi)%5];
   svg+=`<circle class="L" cx="${x.toFixed(1)}" cy="${(yy+3).toFixed(1)}" r="3.6" fill="${c}" style="animation-delay:${(R()*2).toFixed(2)}s;animation-duration:${(1+R()*1.6).toFixed(2)}s;filter:drop-shadow(0 0 5px ${c})"/>`}});
-/* подарки */
 const gf=(x,y,w,h,a,b,r)=>{const id='gf'+x;return `<linearGradient id="${id}" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><ellipse cx="${x+w/2}" cy="${y+h}" rx="${w*.7}" ry="5" fill="#000" opacity=".25"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="url(#${id})"/><rect x="${x+w/2-5}" y="${y}" width="10" height="${h}" fill="${r}"/><rect x="${x}" y="${y+h/2-4}" width="${w}" height="8" fill="${r}" opacity=".85"/><rect x="${x-3}" y="${y-9}" width="${w+6}" height="13" rx="4" fill="url(#${id})" stroke="rgba(0,0,0,.25)"/><path d="M${x+w/2} ${y-9} c-28 -28 -36 6 0 0 c36 6 28 -28 0 0z" fill="${r}" stroke="rgba(0,0,0,.3)"/><circle cx="${x+w/2}" cy="${y-9}" r="4.5" fill="${r}" stroke="rgba(0,0,0,.25)"/><path d="M${x+5} ${y+4} h${w*.35}" stroke="#fff" stroke-width="3" opacity=".4" stroke-linecap="round"/><circle cx="${x+w-9}" cy="${y+h-9}" r="1.8" fill="#fff" opacity=".8"/>`};
 svg+=gf(58,488,54,46,'#e0344f','#8e0c27','#ffd66b')+gf(282,494,62,40,'#3b82ff','#0c3fa8','#f5f5ff')+gf(118,506,38,28,'#22c55e','#0a6b32','#ffd66b')+gf(238,508,36,26,'#b46bff','#5b21b6','#ffe9a0');
-/* звезда */
-svg+=`<g class="pulse"><circle cx="200" cy="52" r="30" fill="#ffd66b" opacity=".55" filter="url(#gl)"/><polygon points="200,28 207,46 227,46 211,58 217,77 200,66 183,77 189,58 173,46 193,46" fill="url(#gs)" stroke="#ffe9a0" stroke-width="1.5" stroke-linejoin="round"/></g>`;
-/* шарики-кнопки */
+svg+=`<g id="topstar"><g class="pulse"><circle cx="200" cy="52" r="30" fill="#ffd66b" opacity=".55" filter="url(#gl)"/><polygon points="200,28 207,46 227,46 211,58 217,77 200,66 183,77 189,58 173,46 193,46" fill="url(#gs)" stroke="#ffe9a0" stroke-width="1.5" stroke-linejoin="round"/></g></g>`;
 const orn=[['⭐',230,172,0],['🎀',160,250,1],['🍬',245,305,2],['❄️',140,360,3],['🎁',280,410,4],['🐑',105,412,5]];
 orn.forEach(([e,x,y,c],i)=>{svg+=`<g transform="translate(${x} ${y})" class="b" data-n="${i+1}" tabindex="0"><g class="sw" style="animation-delay:-${i*.6}s"><g class="bi">
 <line x1="0" y1="-24" x2="0" y2="-34" stroke="#ffd66b" stroke-width="1.5"/>
@@ -237,12 +270,39 @@ orn.forEach(([e,x,y,c],i)=>{svg+=`<g transform="translate(${x} ${y})" class="b" 
 <ellipse class="hl" cx="-9" cy="-12" rx="6" ry="3.5" fill="#fff" opacity=".7" transform="rotate(-35 -9 -12)"/>
 <circle class="hl" r="24" fill="none" stroke="#fff" stroke-width="2" opacity="0"/>
 <text y="9" font-size="22" text-anchor="middle" style="pointer-events:none">${e}</text></g></g></g>`});
-/* мелкие декоративные шарики */
 {const pts=[[230,172],[160,250],[245,305],[140,360],[280,410],[105,412]];let n=0,t=0;while(n<22&&t++<500){const y=95+R()*370,hw=(y-60)*.4,x=200+(R()*2-1)*hw*.92,c=R()*6|0;if(pts.every(p=>Math.hypot(p[0]-x,p[1]-y)>34)){pts.push([x,y]);n++;svg+=`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><g class="sw" style="animation-delay:-${(R()*3).toFixed(2)}s"><circle r="7.5" fill="url(#b${c})" stroke="rgba(0,0,0,.25)"/><circle cx="-2.5" cy="-2.5" r="2" fill="#fff" opacity=".8"/><rect x="-2.5" y="-10.5" width="5" height="4" fill="#ffd66b"/></g></g>`}}}
 for(let i=0;i<18;i++){const a=R()*6.28,d=R(),x=200+Math.cos(a)*(130+d*90),y=270+Math.sin(a)*240,z=.6+R()*.9;svg+=`<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${z.toFixed(2)})"><path d="M0 -10 L2.4 -2.4 L10 0 L2.4 2.4 L0 10 L-2.4 2.4 L-10 0 L-2.4 -2.4Z" fill="#fff6c0" style="transform-box:fill-box;transform-origin:center;animation:tw ${(1.6+R()*2).toFixed(1)}s infinite;animation-delay:-${(R()*3).toFixed(1)}s;filter:drop-shadow(0 0 4px #ffd66b)"/></g>`}
 $('#tree').innerHTML=svg;
 
-/* ---------- музыка: плейлист ---------- */
+let starLit=false;
+const sbtn=$('#starbtn'),hintEl=$('.hint');
+sbtn.onclick=()=>{
+  starLit=!starLit;
+  $('#topstar').classList.toggle('lit',starLit);
+  sbtn.textContent=starLit?'⭐ Звезда горит':'⭐ Повесить звезду';
+  sbtn.classList.toggle('off',starLit);
+  if(starLit){
+    sfx();
+    const r=$('#topstar').getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    for(let i=0;i<26;i++){
+      const s=document.createElement('div');s.className='sp';
+      s.textContent=pick(['✦','✧','✨','★']);
+      s.style.cssText=`left:${cx+(R()-.5)*170}px;top:${cy+(R()-.5)*130}px;font-size:${10+R()*16}px;animation-duration:${.8+R()*.9}s`;
+      document.body.append(s);setTimeout(()=>s.remove(),1800);
+    }
+    for(let i=0;i<34;i++){
+      const s=document.createElement('div');s.className='cf';
+      s.textContent=pick(['🎉','✨','❄️','⭐','🎊','🎄','★']);
+      s.style.cssText=`left:${R()*100}vw;animation-delay:${R()*.9}s`;
+      document.body.append(s);setTimeout(()=>s.remove(),3600);
+    }
+    hintEl.textContent='Звезда зажжена — загадайте желание ✨';
+  }else{
+    hintEl.textContent='Откройте все шесть волшебных игрушек';
+  }
+};
+
 let ac,mon=false,mt,si=0;
 const N={C:523.25,D:587.33,E:659.25,F:698.46,G:783.99,A:880,B:987.77,g:392,a:440,b:493.88};
 const SONGS=['E1 E1 E2 E1 E1 E2 E1 G1 C1.5 D.5 E4 F1 F1 F1.5 F.5 F1 E1 E1 E.5 E.5 E1 D1 D1 E1 D2 G2',
@@ -256,7 +316,43 @@ $('#enter').onclick=()=>{$('#intro').classList.add('out');document.body.classLis
 
 let xc;function sfx(){try{xc=xc||new(window.AudioContext||window.webkitAudioContext)();if(xc.state=='suspended')xc.resume();const t=xc.currentTime,f=pick([784,880,988,1175,1319,1568]);for(const[m,v]of[[1,.13],[2.01,.05],[3.5,.025]]){const o=xc.createOscillator(),g=xc.createGain();o.type='sine';o.frequency.value=f*m;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.8);o.connect(g).connect(xc.destination);o.start(t);o.stop(t+.85)}}catch(e){}}
 document.addEventListener('pointerdown',e=>{if(e.target.closest&&e.target.closest('button,.b,.gift,a,canvas,label,input[type=file]'))sfx()},true);
-/* ---------- окна ---------- */
+
+const SF=(()=>{let s='';for(let i=0;i<6;i++){
+  const a=-Math.PI/2+i*Math.PI/3;
+  const x1=50+Math.cos(a)*27,y1=50+Math.sin(a)*27;
+  const x2=50+Math.cos(a)*15,y2=50+Math.sin(a)*15;
+  s+=`<path d="M50 50 L${x1.toFixed(1)} ${y1.toFixed(1)}"/>`;
+  for(const d of[-.55,.55]){const b=a+d,bx=x2+Math.cos(b)*9,by=y2+Math.sin(b)*9;
+    s+=`<path d="M${x2.toFixed(1)} ${y2.toFixed(1)} L${bx.toFixed(1)} ${by.toFixed(1)}"/>`}
+  const mx=50+Math.cos(a)*22,my=50+Math.sin(a)*22;
+  s+=`<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="1.6" fill="#eaf3ff" stroke="none"/>`;
+}return s})();
+
+const PRED=[
+{c:'✦ Любовь',t:'Тот, кто сейчас кажется просто знакомым, однажды скажет слова, которые ты будешь вспоминать весь год.'},
+{c:'✦ Любовь',t:'В твоей жизни появится человек, рядом с которым можно молчать — и не чувствовать пустоты.'},
+{c:'✦ Любовь',t:'Старое чувство вернётся, но уже спокойным, тёплым и настоящим. И ты поймёшь, зачем оно было.'},
+{c:'✦ Удача',t:'Фортуна уже выбрала тебя — просто она стесняется подойти первой. Сделай шаг сам.'},
+{c:'✦ Удача',t:'Три раза в этом году всё сложится само собой. Не спугни — просто позволь этому случиться.'},
+{c:'✦ Удача',t:'Твоё тихое «а вдруг получится?» однажды превратится в «а как же иначе».'},
+{c:'✦ Здоровье',t:'Тело попросит паузу — услышь его раньше, чем придётся. И тогда год пройдёт легко.'},
+{c:'✦ Здоровье',t:'Сон, воздух и немного тишины сделают для тебя больше, чем любые обещания. Разреши себе это.'},
+{c:'✦ Дорога',t:'Тебя ждёт место, где ты впервые почувствуешь: вот здесь я по-настоящему дома.'},
+{c:'✦ Дорога',t:'Одна поездка изменит угол зрения — и после неё всё в жизни встанет на свои места.'},
+{c:'✦ Творчество',t:'Идея, которая кажется тебе «слишком простой», окажется самой нужной. Не прячь её.'},
+{c:'✦ Творчество',t:'Ты начнёшь то, что откладывал три года. И поймёшь, почему ждал именно столько.'},
+{c:'✦ Дом',t:'В твоём доме появится новый тёплый ритуал — и останется с тобой надолго.'},
+{c:'✦ Дом',t:'Кто-то далёкий снова станет близким. Просто напиши первым — и не жди повода.'},
+{c:'✦ Деньги',t:'Деньги придут за то, что ты умеешь делать легко. Просто начни это ценить.'},
+{c:'✦ Деньги',t:'Одна маленькая привычка неожиданно изменит твой доход. Начни с неё уже в январе.'},
+{c:'✦ Год',t:'Этот год научит тебя одному простому делу — выбирать себя. И это окажется лучшим решением.'},
+{c:'✦ Год',t:'Всё, что ты потерял в прошлом году, вернётся в другом виде — и окажется лучше.'},
+{c:'✦ Год',t:'Тебе будут говорить «спасибо» чаще, чем ты думаешь. Замечай эти моменты.'},
+{c:'✦ Год',t:'Однажды ты поймаешь себя на мысли, что счастлив прямо сейчас. Это и будет главное чудо года.'},
+{c:'✦ Год',t:'Пусть будет меньше «надо» и больше «хочу». С этого всё и начнётся.'},
+{c:'✦ Люди',t:'Рядом окажется тот, кто поверит в тебя раньше, чем ты сам. Держись за него.'}
+];
+
 let clean=null;
 const P={
 1:{t:'С Новым годом!',h:()=>`<div class="letter"><p style="font-size:20px;color:#fff">Дорогие друзья! 🎄</p>
@@ -308,50 +404,236 @@ const P={
   document.querySelectorAll('#cs .btn').forEach(b=>b.onclick=()=>{k=+b.dataset.k;bg=null;document.querySelectorAll('#cs .btn').forEach(q=>q.classList.toggle('off',q!=b));draw()});
   $('#cf').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{bg=im;draw()};im.src=URL.createObjectURL(f)};
   $('#cb').onclick=()=>{draw();const u=c.toDataURL('image/png'),a=document.createElement('a');a.href=u;a.download='otkrytka.png';a.click();$('#co').innerHTML=`<p style="font-size:13px;opacity:.8">Если загрузка не началась — нажмите на картинку и сохраните её:</p><img src="${u}" style="max-width:100%;border-radius:12px">`}}},
-4:{t:'Волшебный снежный шар',h:()=>`<canvas id="gc" class="cv" width="320" height="330" style="max-width:320px;background:none;border:0"></canvas>
-<div class="pred" id="gw" style="font-size:18px;min-height:50px">Потрясите шар и загадайте желание ✨</div>
-<div class="row"><button class="btn" id="g1">Запустить снег</button><button class="btn" id="g2">Гирлянда</button><button class="btn" id="g3">Новое пожелание</button><button class="btn" id="g4">Ночной режим</button><button class="btn" id="g5">Магия</button></div>`,
- i:()=>{const c=$('#gc'),x=c.getContext('2d');let night=1,lights=1,sp=[],t=0,raf;
-  const f=[];for(let i=0;i<110;i++)f.push({x:R()*320,y:R()*300,r:1+R()*2.2,vy:.3+R()*.5,vx:0,p:R()*6});
-  const W=['Пусть сбудется самое заветное!','Пусть в доме всегда пахнет мандаринами и счастьем.','Тепла, света и добрых встреч!','Пусть новый год будет щедрым на чудеса.','Здоровья крепче снежного кома!','Пусть удача заглядывает без стука.'];
-  const shake=()=>f.forEach(a=>{a.vy=-2-R()*3;a.vx=(R()-.5)*5});
-  const loop=()=>{t+=.03;x.clearRect(0,0,320,330);
-   x.save();x.beginPath();x.arc(160,150,126,0,7);x.clip();
-   const g=x.createLinearGradient(0,20,0,280);if(night){g.addColorStop(0,'#04093a');g.addColorStop(1,'#243c8f')}else{g.addColorStop(0,'#6fb7ff');g.addColorStop(1,'#eaf6ff')}x.fillStyle=g;x.fillRect(0,0,320,330);
-   if(night){x.fillStyle='#fff';for(let i=0;i<20;i++){x.globalAlpha=.4+.6*Math.abs(Math.sin(t+i));x.fillRect(i*37%300+10,i*23%120+20,2,2)}x.globalAlpha=1;x.font='34px serif';x.fillText('🌙',215,70)}
-   x.fillStyle='#f4faff';x.beginPath();x.ellipse(160,270,150,42,0,0,7);x.fill();
-   boughs(x,160,252,1.15);x.textAlign='center';x.font='42px serif';x.fillText('☃️',236,262);x.fillText('🎁',80,266);
-   if(lights)for(let k=0;k<16;k++){const y=105+k*8,xx=160+Math.sin(k*1.7)*(6+k*2.8);x.fillStyle=lc[k%5];x.globalAlpha=.4+.6*Math.abs(Math.sin(t*2+k));x.shadowColor=lc[k%5];x.shadowBlur=10;x.beginPath();x.arc(xx,y,3,0,7);x.fill()}
-   x.globalAlpha=1;x.shadowBlur=0;
-   for(const a of f){a.y+=a.vy;a.x+=a.vx+Math.sin(t+a.p)*.3;a.vy+=(.4-a.vy)*.02;a.vx*=.98;if(a.y>290){a.y=15;a.vy=.3}if(a.x<0)a.x=320;if(a.x>320)a.x=0;x.fillStyle='rgba(255,255,255,.9)';x.beginPath();x.arc(a.x,a.y,a.r,0,7);x.fill()}
-   sp=sp.filter(p=>p.l>0);for(const p of sp){p.x+=p.vx;p.y+=p.vy;p.l-=.015;x.fillStyle=`rgba(255,220,100,${p.l})`;x.shadowColor='#ffc94d';x.shadowBlur=8;x.fillRect(p.x,p.y,3,3)}x.shadowBlur=0;
-   x.restore();
-   x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=3;x.beginPath();x.arc(160,150,126,0,7);x.stroke();x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=5;x.beginPath();x.arc(160,150,110,3.5,4.3);x.stroke();
-   const b=x.createLinearGradient(0,275,0,325);b.addColorStop(0,'#8a5a2b');b.addColorStop(1,'#3d2210');x.fillStyle=b;x.beginPath();x.moveTo(50,285);x.lineTo(270,285);x.lineTo(290,325);x.lineTo(30,325);x.fill();x.fillStyle='#ffd66b';x.fillRect(50,285,220,4);
-   raf=requestAnimationFrame(loop)};loop();
-  c.onclick=shake;$('#g1').onclick=shake;$('#g2').onclick=e=>{lights=!lights;e.currentTarget.classList.toggle('off',!lights)};$('#g4').onclick=e=>{night=!night;e.currentTarget.classList.toggle('off',!night)};
-  $('#g3').onclick=()=>{const e=$('#gw');e.textContent=pick(W);e.style.animation='none';void e.offsetWidth;e.style.animation=''};
-  $('#g5').onclick=()=>{for(let i=0;i<80;i++){const a=R()*6.28,s=R()*3+.5;sp.push({x:160,y:150,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1})}};
-  return()=>cancelAnimationFrame(raf)}},
+
+4:{t:'Волшебный снежный шар',h:()=>`<canvas id="gc" class="cv" width="360" height="392" style="max-width:360px;background:none;border:0;border-radius:0"></canvas>
+<div class="pred" id="gw" style="font-size:17px;min-height:74px;padding:0 8px;display:flex;align-items:center;justify-content:center">Потрясите шар — и загадайте самое заветное ✨</div>
+<div class="row">
+<button class="btn" id="g1">❄️ Снегопад</button>
+<button class="btn" id="g2">✨ Гирлянда</button>
+<button class="btn off" id="g3">⭐ Звезда</button>
+<button class="btn" id="g4">🌙 Ночь</button>
+<button class="btn" id="g5">💫 Желание</button>
+</div>`,
+ i:()=>{
+  const c=$('#gc'),x=c.getContext('2d');
+  const CX=180,CY=172,RAD=134;
+  let night=1,lights=1,starOn=0,t=0,raf,shoot=null;
+  const flakes=[];
+  const addSnow=n=>{for(let i=0;i<n;i++)flakes.push({x:CX+(R()-.5)*250,y:R()*250+20,r:.8+R()*2.4,vy:.3+R()*.8,vx:(R()-.5)*.4,p:R()*6})};
+  addSnow(150);
+  const W=[
+   'Пусть в этом году у тебя будет больше дней, о которых хочется вспоминать.',
+   'Пусть найдётся тот, кто будет ждать тебя с работы и спрашивать, как прошёл день.',
+   'Пусть все твои «не сейчас» однажды превратятся в «уже пора».',
+   'Пусть в доме всегда пахнет чем-то тёплым, а за окном будет кто-то, кто спешит к тебе.',
+   'Пусть то, что ты так долго нёс в себе, наконец отпустит — и станет легко.',
+   'Пусть звонят не по делу, а просто чтобы услышать твой голос.',
+   'Пусть каждое твоё «я устал» заканчивается чьим-то «отдохни, я рядом».',
+   'Пусть у тебя получится то, о чём ты боялся даже мечтать.',
+   'Пусть в новом году будет больше поводов смеяться до слёз.',
+   'Пусть всё, что ты отдал людям, вернётся к тебе теплом.'
+  ];
+  const star5=(cx,cy,r,fill,blur)=>{x.save();x.shadowColor='#ffd66b';x.shadowBlur=blur;x.fillStyle=fill;x.beginPath();
+    for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.44:r;
+      const px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr;i?x.lineTo(px,py):x.moveTo(px,py)}
+    x.closePath();x.fill();x.restore()};
+  const shake=()=>flakes.forEach(a=>{a.vy=-2-R()*3;a.vx=(R()-.5)*5});
+
+  const loop=()=>{
+    t+=.02;
+    x.clearRect(0,0,360,392);
+
+    const gl=x.createRadialGradient(CX,CY,RAD*.7,CX,CY,RAD*1.3);
+    gl.addColorStop(0,'rgba(120,180,255,.18)');gl.addColorStop(1,'rgba(120,180,255,0)');
+    x.fillStyle=gl;x.beginPath();x.arc(CX,CY,RAD*1.3,0,7);x.fill();
+
+    x.save();
+    x.beginPath();x.arc(CX,CY,RAD,0,7);x.clip();
+
+    const g=x.createLinearGradient(0,CY-RAD,0,CY+RAD);
+    if(night){g.addColorStop(0,'#050b38');g.addColorStop(.55,'#0f2a6b');g.addColorStop(1,'#2a4a92')}
+    else{g.addColorStop(0,'#8ecbff');g.addColorStop(.55,'#c8e8ff');g.addColorStop(1,'#f0faff')}
+    x.fillStyle=g;x.fillRect(0,0,360,392);
+
+    if(night){
+      for(let i=0;i<28;i++){
+        const sx=CX+((i*89)%250)-125,sy=CY-118+((i*53)%210);
+        x.globalAlpha=.3+.7*Math.abs(Math.sin(t*1.6+i));
+        x.fillStyle='#fff';x.beginPath();x.arc(sx,sy,1.2,0,7);x.fill();
+      }
+      x.globalAlpha=1;
+      x.save();x.shadowColor='#fff3c0';x.shadowBlur=26;x.fillStyle='#fff6cf';
+      x.beginPath();x.arc(246,88,16,0,7);x.fill();
+      x.fillStyle='#0f2a6b';x.beginPath();x.arc(252,82,14,0,7);x.fill();
+      x.restore();
+    }
+
+    x.fillStyle=night?'#e9f3ff':'#ffffff';
+    x.beginPath();x.ellipse(CX,288,170,50,0,0,7);x.fill();
+    x.fillStyle=night?'#d3e4fa':'#eaf5ff';
+    x.beginPath();x.ellipse(CX-52,280,74,24,0,0,7);x.fill();
+    x.beginPath();x.ellipse(CX+64,286,58,20,0,0,7);x.fill();
+
+    boughs(x,CX,280,1.06);
+
+    if(starOn){
+      star5(CX,97,14,'#ffd66b',18+8*Math.abs(Math.sin(t*3)));
+      x.save();x.globalAlpha=.35+.3*Math.abs(Math.sin(t*2));
+      x.fillStyle='#fff3c0';x.beginPath();x.arc(CX,97,22,0,7);x.fill();x.restore();
+    }
+
+    if(lights){
+      for(let k=0;k<20;k++){
+        const yy=118+k*8.4, hw=(yy-105)*.40;
+        const xx=CX+Math.sin(k*2.3)*hw*.85;
+        const col=lc[k%5];
+        x.globalAlpha=.4+.6*Math.abs(Math.sin(t*2+k*.7));
+        x.fillStyle=col;x.shadowColor=col;x.shadowBlur=10;
+        x.beginPath();x.arc(xx,yy,2.8,0,7);x.fill();
+      }
+      x.globalAlpha=1;x.shadowBlur=0;
+    }
+
+    const gift=(gx,gy,w,h,a,b,rib)=>{
+      x.fillStyle=b;x.fillRect(gx,gy,w,h);
+      x.fillStyle=a;x.fillRect(gx,gy,w,h*.45);
+      x.fillStyle=rib;x.fillRect(gx+w/2-2,gy,4,h);
+      x.fillRect(gx,gy+h*.45-3,w,5);
+      x.fillStyle='#fff';x.globalAlpha=.35;x.fillRect(gx+3,gy+3,w*.3,2);x.globalAlpha=1;
+    };
+    gift(112,262,20,18,'#ff4d6d','#a80d24','#ffd66b');
+    gift(226,268,17,15,'#4dd2ff','#0a6fb0','#ffe9a0');
+
+    x.fillStyle='#f7fbff';
+    x.beginPath();x.arc(254,258,9,0,7);x.fill();
+    x.beginPath();x.arc(254,272,13,0,7);x.fill();
+    x.fillStyle='#ff7a3c';x.beginPath();x.moveTo(254,258);x.lineTo(262,260);x.lineTo(254,261);x.fill();
+    x.fillStyle='#1a2340';x.beginPath();x.arc(251,256,1.1,0,7);x.fill();x.beginPath();x.arc(257,256,1.1,0,7);x.fill();
+
+    for(let i=0;i<flakes.length;i++){
+      const a=flakes[i];
+      a.y+=a.vy;a.x+=a.vx+Math.sin(t+a.p)*.3;a.vy+=(.45-a.vy)*.012;a.vx*=.995;
+      if(a.y>292){a.y=30-R()*20;a.x=CX+(R()-.5)*230;a.vy=.3+R()*.8;a.vx=(R()-.5)*.4}
+      if(a.x<CX-145)a.x=CX+145;if(a.x>CX+145)a.x=CX-145;
+      x.fillStyle='rgba(255,255,255,.95)';
+      x.beginPath();x.arc(a.x,a.y,a.r,0,7);x.fill();
+    }
+
+    if(shoot){
+      shoot.x+=shoot.vx;shoot.y+=shoot.vy;shoot.l-=.011;
+      if(shoot.l<=0)shoot=null;
+      else{
+        const grd=x.createLinearGradient(shoot.x-46,shoot.y-26,shoot.x,shoot.y);
+        grd.addColorStop(0,'rgba(255,235,170,0)');
+        grd.addColorStop(1,'rgba(255,235,170,'+shoot.l+')');
+        x.strokeStyle=grd;x.lineWidth=2.4;x.lineCap='round';
+        x.beginPath();x.moveTo(shoot.x-46,shoot.y-26);x.lineTo(shoot.x,shoot.y);x.stroke();
+        x.fillStyle='rgba(255,245,200,'+shoot.l+')';
+        x.beginPath();x.arc(shoot.x,shoot.y,2.4,0,7);x.fill();
+      }
+    }
+
+    x.restore();
+
+    x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.5)';
+    x.beginPath();x.arc(CX,CY,RAD,0,7);x.stroke();
+    x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=6;
+    x.beginPath();x.arc(CX,CY,RAD-13,3.42,4.42);x.stroke();
+    x.strokeStyle='rgba(255,255,255,.35)';x.lineWidth=3;
+    x.beginPath();x.arc(CX,CY,RAD-24,3.9,4.5);x.stroke();
+
+    const bg2=x.createLinearGradient(0,286,0,392);
+    bg2.addColorStop(0,'#c08b3c');bg2.addColorStop(.35,'#7a4c1c');bg2.addColorStop(1,'#2a1608');
+    x.fillStyle=bg2;
+    x.beginPath();x.moveTo(CX-108,292);x.lineTo(CX+108,292);x.lineTo(CX+128,380);x.lineTo(CX-128,380);x.closePath();x.fill();
+    x.fillStyle='#ffd66b';
+    x.beginPath();x.moveTo(CX-110,288);x.lineTo(CX+110,288);x.lineTo(CX+106,297);x.lineTo(CX-106,297);x.closePath();x.fill();
+    x.fillStyle='rgba(255,214,107,.9)';x.font='600 15px Montserrat,sans-serif';x.textAlign='center';
+    x.fillText('2 0 2 7',CX,352);
+
+    raf=requestAnimationFrame(loop);
+  };
+  loop();
+
+  c.onclick=()=>{addSnow(30);shake()};
+  $('#g1').onclick=()=>{addSnow(60);shake()};
+  $('#g2').onclick=e=>{lights=!lights;e.currentTarget.classList.toggle('off',!lights)};
+  $('#g3').onclick=e=>{starOn=!starOn;e.currentTarget.classList.toggle('off',!starOn);if(starOn)sfx()};
+  $('#g4').onclick=e=>{night=!night;e.currentTarget.classList.toggle('off',!night)};
+  $('#g5').onclick=()=>{
+    const el=$('#gw');
+    el.style.opacity='0';
+    setTimeout(()=>{
+      el.textContent=pick(W);
+      el.style.opacity='1';
+      el.style.animation='none';void el.offsetWidth;el.style.animation='';
+    },200);
+    shoot={x:CX-110,y:CY-92,vx:2.5,vy:1.5,l:1};
+    sfx();
+  };
+
+  return()=>cancelAnimationFrame(raf)
+ }},
+
 5:{t:'Новогодние стихи',h:()=>`<div class="tabs" id="pt"></div><div class="poem" id="pp"></div><div style="text-align:center;font-size:26px;margin-top:10px">🎄 ❄️ 🎁 ⭐ 🎅</div>`,
  i:()=>{const L=[['Снегопад','Тихо падает снег на ресницы,\nГород спит в серебристом огне.\nПусть всё доброе в жизни случится —\nИ в году, и сейчас, и во сне.'],['Ёлка','Зажигается ёлка огнями,\nКаждый шарик — как маленький мир.\nЗагадай своё чудо заранее —\nСкоро будет и сказка, и пир.'],['Куранты','Бьют куранты — двенадцать ударов,\nЗагадай по мечте на каждый.\nПусть удача идёт по пятам,\nА тревоги отпустят однажды.'],['Мандарины','Пахнет в доме хвоей и мандаринами,\nЗа окном метель поёт и вьётся.\nПусть год новый, добрый и красивый\nКаждому подарком попадётся.'],['Снеговик','Во дворе стоит снеговик,\nНос морковкой, в руке метла.\nОн за зиму к морозу привык —\nЛишь бы радость к нам зашла.'],['Подарок','Под ёлкой ждёт заветный свёрток,\nЛентой атласной перевит.\nПусть в нём окажется, как в сказке,\nВсё то, что сердце хранит.'],['Дед Мороз','Дед Мороз по свету мчится,\nМешок подарков за спиной.\nПусть к тебе он постучится\nИ подарит свет и покой.']];
   const sh=n=>{const p=$('#pp');p.textContent=L[n][1];p.style.animation='none';void p.offsetWidth;p.style.animation='';document.querySelectorAll('#pt .btn').forEach((b,i)=>b.classList.toggle('off',i!=n))};
   L.forEach((q,n)=>{const b=document.createElement('button');b.className='btn off';b.textContent=q[0];b.onclick=()=>sh(n);$('#pt').append(b)});sh(0)}},
-6:{t:'Новогодние предсказания',h:()=>`<p style="text-align:center;margin:0">Нажми на подарок и узнай, что ждёт тебя в новом году!</p><div class="gift" id="gf">🎁</div><div class="pred" id="pr">Нажми на подарок 🎀</div><div class="row"><button class="btn" id="gr" style="display:none">Попробовать ещё раз</button></div>`,
- i:()=>{const A=['Тебя ждёт неожиданная радостная встреча 💫','Исполнится мечта, о которой ты почти забыл 🌠','Деньги придут оттуда, откуда не ждёшь 💰','Ты найдёшь своё любимое дело 🚀','Впереди путешествие, которое запомнится навсегда ✈️','Самые тёплые люди будут рядом 🤗','Год принесёт крепкое здоровье и бодрость 💪','Тебя ждёт приятный сюрприз в самый обычный день 🎁','Ты сделаешь то, чего боялся, — и у тебя получится 🔥','Каждый твой день будет с маленьким чудом ✨'];
-  const go=()=>{const g=$('#gf');if(g.classList.contains('o'))return;g.classList.add('o');g.textContent='🎊';$('#pr').textContent=pick(A);$('#gr').style.display='';
-   for(let i=0;i<36;i++){const s=document.createElement('div');s.className='cf';s.textContent=pick(['🎉','✨','❄️','⭐','🎊','🎄']);s.style.cssText=`left:${R()*100}vw;animation-delay:${R()*.8}s`;document.body.append(s);setTimeout(()=>s.remove(),3600)}};
-  $('#gf').onclick=go;$('#gr').onclick=()=>{const g=$('#gf');g.classList.remove('o');g.textContent='🎁';$('#pr').textContent='Нажми на подарок 🎀';$('#gr').style.display='none'}}},
+
+6:{t:'Новогоднее предсказание',h:()=>`<div class="orc">
+  <div class="orb" id="orcball" role="button" tabindex="0" aria-label="Кристальный шар предсказаний">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="none" stroke="#eaf3ff" stroke-width="1.5" stroke-linecap="round" opacity=".85">${SF}</g>
+      <circle cx="50" cy="50" r="2.6" fill="#fff" opacity=".95"/>
+    </svg>
+  </div>
+  <div class="fcard" id="orccard">
+    <div class="fchip">✦ Шар ждёт</div>
+    <p class="ftext">Прикоснись к шару — и он расскажет, что готовит тебе этот год.</p>
+  </div>
+  <button class="btn" id="orcmore">✨ Ещё предсказание</button>
+</div>`,
+ i:()=>{
+  const ball=$('#orcball'),card=$('#orccard');
+  const COLORS=[['золотой','#ffd66b'],['изумрудный','#48e0a0'],['алый','#ff6b7a'],['небесный','#6ec6ff'],['серебряный','#dfe8ff'],['сливовый','#c58bff'],['медный','#e08a3c'],['мятный','#7dffc4']];
+  let last=-1;
+  const reveal=()=>{
+    let n;do{n=R()*PRED.length|0}while(n===last);
+    last=n;
+    const p=PRED[n],num=1+(R()*99|0),col=pick(COLORS);
+    card.innerHTML='<div class="fchip">'+p.c+'</div>'+
+      '<p class="ftext">'+p.t+'</p>'+
+      '<div class="fmeta"><span>Счастливое число: <b>'+num+'</b></span>'+
+      '<span>Цвет удачи: <b style="color:'+col[1]+'">'+col[0]+'</b></span></div>';
+    card.classList.remove('show');void card.offsetWidth;card.classList.add('show');
+  };
+  const spin=()=>{
+    ball.classList.remove('spin');void ball.offsetWidth;ball.classList.add('spin');
+    sfx();
+    const r=ball.getBoundingClientRect();
+    for(let i=0;i<14;i++){
+      const s=document.createElement('div');s.className='sp';
+      s.textContent=pick(['✦','✧','✨','❄']);
+      s.style.cssText='left:'+(r.left+r.width/2+(R()-.5)*110)+'px;top:'+(r.top+r.height/2+(R()-.5)*110)+'px;font-size:'+(10+R()*14)+'px';
+      document.body.append(s);setTimeout(()=>s.remove(),900);
+    }
+    setTimeout(reveal,420);
+  };
+  ball.onclick=spin;
+  ball.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();spin()}};
+  $('#orcmore').onclick=spin;
+ }},
+
 7:{t:'AR-открытка с QR-кодом',h:()=>`<p style="text-align:center;margin-top:0">Введите имя получателя, покажите QR-код другу, и он наведёт на него камеру телефона. Откроется AR: 3D-ёлка, салюты и поздравление прямо поверх камеры.</p>
-<input id="an" placeholder="Имя получателя (необязательно)" maxlength="24"><div style="text-align:center"><div id="qr"></div><br><p class="vl" style="color:#fff;opacity:.75">QR открывает AR прямо с этого сайта, отдельные файлы не нужны. Он работает, когда сайт выложен в интернет по https (например, на GitHub Pages), с телефона нужно разрешить камеру.</p><a class="btn" id="ql" target="_blank" style="text-decoration:none;display:inline-block">Открыть AR на этом устройстве</a></div>`,
- i:()=>{const mk=()=>{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('ar','1');if($('#an').value)u.searchParams.set('to',$('#an').value);$('#qr').innerHTML='';$('#ql').href=u.href;if(window.QRCode){try{new QRCode($('#qr'),{text:u.href,width:200,height:200,colorDark:'#0a1440',colorLight:'#ffffff'})}catch(e){}}if(!$('#qr').children.length)$('#qr').innerHTML='<img width=200 height=200 alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data='+encodeURIComponent(u.href)+'">'};mk();$('#an').oninput=mk}}
+<input id="an" placeholder="Имя получателя (необязательно)" maxlength="24"><div style="text-align:center"><div id="qr"></div><br><p class="vl" style="color:#fff;opacity:.85">Отсканируйте QR камерой телефона. Камера открытки включается после нажатия на кнопку. Для работы камера требует опубликованный сайт по HTTPS и разрешение в браузере.</p><a class="btn" id="ql" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Открыть открытку</a><div class="row"><button class="btn" id="qdl">Скачать QR-код</button><button class="btn" id="qsh">Поделиться</button><button class="btn" id="qcp">Копировать ссылку</button></div><p id="qmsg" class="vl" aria-live="polite"></p></div>`,
+ i:()=>{const mk=()=>{const u=new URL('ar.html',location.href);u.search='';u.hash='';if($('#an').value.trim())u.searchParams.set('to',$('#an').value.trim());$('#qr').innerHTML='';$('#ql').href=u.href;if(window.QRCode){try{new QRCode($('#qr'),{text:u.href,width:240,height:240,colorDark:'#0a1440',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})}catch(e){}}if(!$('#qr').children.length)$('#qr').innerHTML='<img width=240 height=240 alt="QR-код открытки" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=2&data='+encodeURIComponent(u.href)+'">'};mk();$('#an').oninput=mk;$('#qdl').onclick=()=>{const el=$('#qr').querySelector('canvas, img');if(!el){$('#qmsg').textContent='QR-код ещё загружается.';return}const a=document.createElement('a');a.download='novogodnyaya-otkrytka-QR.png';a.href=el.tagName==='CANVAS'?el.toDataURL('image/png'):el.src;a.click();$('#qmsg').textContent='QR-код сохранён.'};$('#qsh').onclick=async()=>{const u=$('#ql').href;try{if(navigator.share)await navigator.share({title:'Новогодняя открытка',text:'Открой мою новогоднюю AR-открытку 🎄',url:u});else{await navigator.clipboard.writeText(u);$('#qmsg').textContent='Ссылка скопирована — отправьте её вместе с QR-кодом.'}}catch(e){if(e.name!=='AbortError')$('#qmsg').textContent='Скопируйте ссылку кнопкой ниже.'}};$('#qcp').onclick=async()=>{try{await navigator.clipboard.writeText($('#ql').href);$('#qmsg').textContent='Ссылка скопирована.'}catch(e){$('#qmsg').textContent=$('#ql').href}}}}
 };
 function open(n){const p=P[n];$('#mt').textContent=p.t;$('#mb').innerHTML=p.h();$('#m').classList.add('on');clean=p.i&&p.i()||null}
 function close(){$('#m').classList.remove('on');clean&&clean();clean=null;$('#mb').innerHTML=''}
 $('#arb').onclick=()=>open(7);
 document.querySelectorAll('.b').forEach(b=>{b.onclick=()=>open(b.dataset.n);b.onkeydown=e=>{if(e.key=='Enter')open(b.dataset.n)}});
 $('.x').onclick=close;$('#m').onclick=e=>{if(e.target.id=='m')close()};addEventListener('keydown',e=>{if(e.key=='Escape')close()});
-/* ---------- сказочная сцена ---------- */
+
 (()=>{const pine=(x,y,k)=>{let o='';for(let i=0;i<4;i++){const y0=y-k*(150-i*32),w=k*(30+i*14),h=k*58;o+=`<path d="M${x} ${y0} Q${x+w*.55} ${y0+h*.35} ${x+w} ${y0+h} Q${x} ${y0+h*.8} ${x-w} ${y0+h} Q${x-w*.55} ${y0+h*.35} ${x} ${y0}Z" fill="#0d5a35" stroke="#06301a"/><path d="M${x-w*.6} ${y0+h*.6} Q${x} ${y0+h*.42} ${x+w*.6} ${y0+h*.6}" fill="none" stroke="#fff" stroke-width="${3*k}" stroke-dasharray="${8*k} ${6*k}" stroke-linecap="round" opacity=".85"/>`}return o+`<rect x="${x-4*k}" y="${y}" width="${8*k}" height="${14*k}" fill="#4a280f"/>`};
  let g=`<defs><linearGradient id="hl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f2ff"/><stop offset="1" stop-color="#8fa9e6"/></linearGradient></defs>
 <path d="M0 300 L120 190 L220 270 L360 150 L500 280 L640 200 L780 290 L920 170 L1060 270 L1200 210 V400 H0Z" fill="#1d3a82" opacity=".75"/>
@@ -363,6 +645,7 @@ $('.x').onclick=close;$('#m').onclick=e=>{if(e.target.id=='m')close()};addEventL
 <path d="M0 374 Q300 352 600 370 T1200 362 V400H0Z" fill="#f4f8ff"/>`;
  $('#bgs').innerHTML=g;
  for(let i=0;i<28;i++){const f=document.createElement('div');f.className='ff';f.style.cssText=`left:${R()*100}vw;top:${40+R()*60}vh;--x:${(R()-.5)*120}px;--d:${5+R()*6}s;animation-delay:-${R()*8}s`;document.body.append(f)}})();
+})();
 </script>
 </body>
 </html>
